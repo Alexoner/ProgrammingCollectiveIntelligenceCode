@@ -1,4 +1,4 @@
-ProgrammingCollectiveIntelligenceCode
-=====================================
+PRML
+====
 
-Code of Programming Collective Intelligence.
+Pattern Recognition and Machine Learning toolbox
