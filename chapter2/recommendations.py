@@ -70,7 +70,7 @@ def sim_pearson(prefs, p1, p2):
 
     # Calculate Pearson score
     num = pSum - (sum1 * sum2) / n
-    den = sqrt(sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n)
+    den = sqrt((sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n))
 
     if den == 0:
         return 0
@@ -92,3 +92,44 @@ def topMatches(prefs, person, n=5, similarity=sim_pearson):
     scores.sort()
     scores.reverse()
     return scores[0:n]
+
+# recommending items
+# Score the items by producing a weighted score that ranks the critics.
+# Take the votes of all the other critics and multiply how similar they
+# are to me by the score they gave each movie.
+
+# Gets recommendations for a person by using a weighted average
+# of every other user's rankings
+
+
+def getRecommendations(prefs, person, similarity=sim_pearson):
+    totals = {}
+    simSums = {}
+    for other in prefs:
+        # don't compare me to myself
+        if other == person:
+            continue
+        sim = similarity(prefs, person, other)
+
+        # ignore scores of zero or lower
+        if sim <= 0:
+            continue
+        for item in prefs[other]:
+
+            # only score movies I haven't seen yet
+            if item not in prefs[person] or prefs[person][item] == 0:
+                # Similarity * Score
+                totals.setdefault(item, 0)
+                totals[item] += prefs[other][item] * sim
+                # Sum of similarities
+                simSums.setdefault(item, 0)
+                simSums[item] += sim
+
+    # Create the normalized list
+    rankings = [(total / simSums[item], item)
+                for item, total in totals.items()]
+
+    # Return the sorted list
+    rankings.sort()
+    rankings.reverse()
+    return rankings
