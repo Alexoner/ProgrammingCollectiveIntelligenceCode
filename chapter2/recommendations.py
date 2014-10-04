@@ -134,8 +134,28 @@ def getRecommendations(prefs, person, similarity=sim_pearson):
     rankings.reverse()
     return rankings
 
+# Matching products
+# Determine similarity between items by looking at who liked a particular
+# item and seeing the other things they liked.
+# This is actually the same method we used to determine similarity between
+# people:to swap the people and items.
+
+
+def transformPrefs(prefs):
+    result = {}
+    for person in prefs:
+        for item in prefs[person]:
+            result.setdefault(item, {})
+
+            # Flip item and person
+            result[item][person] = prefs[person][item]
+
+    return result
+
 if __name__ == "__main__":
     print sim_pearson(critics, 'Lisa Rose', 'Gene Seymour')
     print topMatches(critics, 'Toby', n=3)
     print getRecommendations(critics, 'Toby')
     print getRecommendations(critics, 'Toby', similarity=sim_distance)
+    movies = transformPrefs(critics)
+    print topMatches(movies, 'Superman Returns')
