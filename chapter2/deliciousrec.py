@@ -1,4 +1,7 @@
 from pydelicious import get_popular, get_userposts, get_urlposts
+import time
+import recommendations
+import random
 
 
 def initializeUserDict(tag, count=5):
@@ -7,7 +10,7 @@ def initializeUserDict(tag, count=5):
     # get the top count' popular posts
     for p1 in get_popular(tag=tag)[0:count]:
         # find all users who posted this
-        for p2 in get_urlposts(p1['href']):
+        for p2 in get_urlposts(p1['url']):
             user = p2['user']
             user_dict[user] = {}
 
@@ -26,9 +29,9 @@ def fillItems(user_dict):
                 print "Failed user " + user + ",retrying"
                 time.sleep(4)
         for post in posts:
-            url = post['href']
+            url = post['url']
             user_dict[user][url] = 1.0
-            all_item[url] = 1
+            all_items[url] = 1
 
     # Fill in missing items with 0
     for ratings in user_dict.values():
@@ -39,4 +42,8 @@ def fillItems(user_dict):
 if __name__ == "__main__":
     delusers = initializeUserDict('programming')
     delusers['onerhao'] = {}
-    fillItem(delusers)
+    fillItems(delusers)
+    # print delusers
+    user = delusers.keys()[random.randint(0, len(delusers) - 1)]
+    print user
+    print recommendations.topMatches(delusers, user)
