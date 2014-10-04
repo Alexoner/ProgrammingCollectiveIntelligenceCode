@@ -133,3 +133,9 @@ def getRecommendations(prefs, person, similarity=sim_pearson):
     rankings.sort()
     rankings.reverse()
     return rankings
+
+if __name__ == "__main__":
+    print sim_pearson(critics, 'Lisa Rose', 'Gene Seymour')
+    print topMatches(critics, 'Toby', n=3)
+    print getRecommendations(critics, 'Toby')
+    print getRecommendations(critics, 'Toby', similarity=sim_distance)
