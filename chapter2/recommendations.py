@@ -176,6 +176,43 @@ def calculateSimilarItems(prefs, n=10):
         result[item] = scores
     return result
 
+# Getting Recommendations
+# Give recommendations using the item similarity dictionary without going
+# through the whole dataset.
+# Get all the items that the user has ranked,find the similar items,and
+# weight them according to how similar they are.
+
+
+def getRecommendedItems(prefs, itemMatch, user):
+    userRatings = prefs[user]
+    scores = {}
+    totalSim = {}
+
+    # Loop over rated by this user
+    for (item, rating) in userRatings.items():
+
+        # Loop over items similar to this one
+        for (similarity, item2) in itemMatch[item]:
+
+            # ignore if this user has already rated this item
+            if item2 in userRatings:
+                continue
+
+            # Weighted sum of ratings times similarity
+            scores.setdefault(item2, 0)
+            scores[item2] += similarity * rating
+
+            # Sum of all the similarities
+            totalSim.setdefault(item2, 0)
+            totalSim[item2] += similarity
+
+    # divide each total score by total weighting to get an average
+    rankings = [(scores[item] / totalSim[item], item) for item in scores]
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+
 if __name__ == "__main__":
     print sim_pearson(critics, 'Lisa Rose', 'Gene Seymour')
 
@@ -188,4 +225,6 @@ if __name__ == "__main__":
     print topMatches(movies, 'Superman Returns')
 
     print "\nSimilar items:"
-    print calculateSimilarItems(critics)
+    itemsim = calculateSimilarItems(critics)
+
+    print getRecommendedItems(critics, itemsim, 'Toby')
