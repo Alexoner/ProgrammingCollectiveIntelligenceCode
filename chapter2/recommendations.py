@@ -152,10 +152,40 @@ def transformPrefs(prefs):
 
     return result
 
+# Item-based Filtering
+# user-based collaborative filtering and item-based collaborative filtering
+# Item-based:
+#   Precompute the most similar items for each item.
+
+
+def calculateSimilarItems(prefs, n=10):
+    # Create a dictionary of items showing which other items they are most
+    # similar to
+    result = {}
+
+    # Invert the preference matrix to be item-specific
+    itemPrefs = transformPrefs(prefs)
+    c = 0
+    for item in itemPrefs:
+        # Status update for large datasets
+        c += 1
+        if c % 100 == 0:
+            print "%d / %d" % (c, len(Prefs))
+        # Find the most similar items to this one
+        scores = topMatches(itemPrefs, item, n=n, similarity=sim_distance)
+        result[item] = scores
+    return result
+
 if __name__ == "__main__":
     print sim_pearson(critics, 'Lisa Rose', 'Gene Seymour')
+
     print topMatches(critics, 'Toby', n=3)
+
     print getRecommendations(critics, 'Toby')
     print getRecommendations(critics, 'Toby', similarity=sim_distance)
+
     movies = transformPrefs(critics)
     print topMatches(movies, 'Superman Returns')
+
+    print "\nSimilar items:"
+    print calculateSimilarItems(critics)

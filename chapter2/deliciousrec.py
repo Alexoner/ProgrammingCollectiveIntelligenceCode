@@ -4,6 +4,8 @@ import recommendations
 import random
 
 
+# build the dataset
+
 def initializeUserDict(tag, count=5):
     user_dict = {}
 
@@ -43,7 +45,11 @@ if __name__ == "__main__":
     delusers = initializeUserDict('programming')
     delusers['onerhao'] = {}
     fillItems(delusers)
-    # print delusers
+    print delusers
     user = delusers.keys()[random.randint(0, len(delusers) - 1)]
     print user
     print recommendations.topMatches(delusers, user)
+    print recommendations.getRecommendations(delusers, user)
+    # url = recommendations.getRecommendations(delusers, user)[0][1]
+    # print recommendations.topMatches(
+        # recommendations.transformPrefs(delusers), url)
