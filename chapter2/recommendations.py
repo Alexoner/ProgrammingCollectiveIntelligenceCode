@@ -248,5 +248,5 @@ if __name__ == "__main__":
     print getRecommendedItems(critics, itemsim, 'Toby')
 
     prefs = loadMovieLens()
-    print prefs['87']
+    # print prefs['87']
     print getRecommendations(prefs, '87')[0:30]
