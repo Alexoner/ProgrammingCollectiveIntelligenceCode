@@ -213,6 +213,24 @@ def getRecommendedItems(prefs, itemMatch, user):
     return rankings
 
 
+def loadMovieLens(path='../dataset/ml-10M100K'):
+
+    # Get movie titles
+    movies = {}
+    for line in open(path + '/movies.dat'):
+        (id, title) = line.split('::')[0:2]
+        movies[id] = title
+
+    # Load data
+    prefs = {}
+    for line in open(path + '/ratings.dat'):
+        (user, movieid, rating, ts) = line.split('::')
+        prefs.setdefault(user, {})
+        prefs[user][movies[movieid]] = float(rating)
+
+    return prefs
+
+
 if __name__ == "__main__":
     print sim_pearson(critics, 'Lisa Rose', 'Gene Seymour')
 
@@ -228,3 +246,7 @@ if __name__ == "__main__":
     itemsim = calculateSimilarItems(critics)
 
     print getRecommendedItems(critics, itemsim, 'Toby')
+
+    prefs = loadMovieLens()
+    print prefs['87']
+    print getRecommendations(prefs, '87')[0:30]
