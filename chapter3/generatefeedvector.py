@@ -26,6 +26,9 @@ def getwordcounts(url):
 
     return d.feed.title, wc
 
+# strips out all of the HTML and splits the words by nonalphabetical
+# characters,returning them as a list.
+
 
 def getwords(html):
     # Remove all the HTML tags
@@ -36,3 +39,46 @@ def getwords(html):
 
     # Convert to lowercase
     return [word.lower() for word in words if word != '']
+
+if __name__ == "__main__":
+    # generates the word counts for each blog,as well as the number of
+    # blogs each word appeared in (apcount).
+    apcount = {}
+    wordcounts = {}
+    feedlist = [line for line in file('feedlist.txt')]
+    for feedurl in file('feedlist.txt'):
+        try:
+            title, wc = getwordcounts(feedurl)
+            wordcounts[title] = wc
+            for word, count in wc.items():
+                apcount.setdefault(word, 0)
+                if count > 1:
+                    apcount[word] += 1
+        except:
+            print "Failed to parse feed %s" % (feedurl)
+
+    # generate the list of words that will actually be used in counts for
+    # each blog.Start with 10 percents as the lower bound and 50 percents
+    # as the upper bound.
+    wordlist = []
+    for w, bc in apcount.itms():
+        frac = float(bc) / len(feedlist)
+        if frac > 0.1 and frac < 0.5:
+            wordlist.append(w)
+
+    # use the list of words and the list of blogs to create a text file
+    # containing a big matrix of all the words counts for each of the
+    # blogs
+    out = file('blogdata.txt', 'w')
+    out.write('Blog')
+    for word in wordlist:
+        out.write('\t%s' % word)
+    out.write('\n')
+    for blog, wc in wordcounts.items():
+        out.write(blog)
+        for word in wordlist:
+            if word in wc:
+                out.write('\t%d' % wc[word])
+            else:
+                out.write('\t0')
+        out.write('\n')
