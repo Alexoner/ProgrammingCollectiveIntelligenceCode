@@ -215,9 +215,26 @@ try:
 except:
     print "Python Imaging Library not found"
 
+# Column clustering
+# rotate the entire dataset so that columns become rows,each with a list
+# of numbers indicating how many times that particular word appear in each
+# of the blogs
+
+
+def rotatematrix(data):
+    newdata = []
+    for i in xrange(len(data[0])):
+        newrow = [data[j][i] for j in xrange(len(data))]
+        newdata.append(newrow)
+
+    return newdata
+
 if __name__ == "__main__":
     blogname, words, data = readfile("blogdata.txt")
     clust = hcluster(data)
     printclust(clust, labels=blogname)
 
     drawdendrogram(clust, blogname, jpeg='blogcluster.jpg')
+    rdata = rotatematrix(data)
+    wordclust = hcluster(rdata)
+    drawdendrogram(wordclust, labels=words, jpeg='wordclust.jpg')
