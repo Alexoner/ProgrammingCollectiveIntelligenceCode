@@ -63,3 +63,56 @@ class bicluster:
         self.vec = vec
         self.id = id
         self.distance = distance
+
+# Initialization: for hierarchical clustering, creating a group of
+#   clusters that are just the original items.
+# Maintenance: search for two best matches by trying every possible pair
+# and calculating their correlation.The best pari of clusters are merged
+# into a single cluster.The data for this new cluster is the average of
+# data for two old clusters.
+# Termination:only one cluster remains
+
+
+def hcluster(rows, distance=pearson):
+    distances = {}
+    currentclustid = -1
+
+    # Clusters are initially just the rows
+    clust = [bicluster(rows[i], id=i) for i in xrange(len(rows))]
+
+    while len(clust) > 1:
+        lowestpair = (0, 1)
+        closest = distance(clust[0].vec, clust[1].vec)
+
+        # loop through every pair looking for the smallest distance
+        for i in xrange(len(clust)):
+            for j in xrange(i + 1, len(clust)):
+                # distance is the cache of distance calculations
+                if (clust[i].id, clust[j].id) not in distances:
+                    distances[(clust[i].id, clust[j].id)] = distance(
+                        clust[i].vec, clust[j].vec)
+
+                d = distances[(clust[i].id, clust[j].id)]
+
+                if d < closest:
+                    closest = d
+                    lowestpair = (i, j)
+
+            # calculate the average of the two clusters
+            mergevec = [(clust[lowestpair[0]].vec[i] +
+                         clust[lowestpair[1]].vec[i]) / 2.0
+                        for i in xrange(len(clust[0].vec))]
+
+            # create the new cluster
+            newcluster = bicluster(mergevec, left=clust[lowestpair[0]],
+                                   right=clust[lowestpair[1]],
+                                   distance=closest,
+                                   id=currentclustid)
+
+            # cluster ids that weren't in the original set are negative
+            currentclustid = -1
+            del clust[lowestpair[1]]
+            del clust[lowestpair[0]]
+            clust.append(newcluster)
+
+    return clust[0]
