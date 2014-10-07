@@ -2,15 +2,20 @@
 
 import feedparser
 import re
+import urllib2
 
 # Returns title and dictionary of word counts for an RSS feed
+
+# proxy = urllib2.ProxyHandler({"http": "http://127.0.0.1:8087/"})
 
 
 def getwordcounts(url):
     # Parse the feed
+    # d = feedparser.parse(url, handlers=[proxy])
     d = feedparser.parse(url)
     wc = {}
 
+    print d.feed.title
     # Loop over all the entries
     for e in d.entries:
         if 'summary' in e:
@@ -22,7 +27,7 @@ def getwordcounts(url):
         words = getwords(e.title + ' ' + summary)
         for word in words:
             wc.setdefault(word, 0)
-            wc.setdefault[word] += 1
+            wc[word] += 1
 
     return d.feed.title, wc
 
@@ -61,7 +66,7 @@ if __name__ == "__main__":
     # each blog.Start with 10 percents as the lower bound and 50 percents
     # as the upper bound.
     wordlist = []
-    for w, bc in apcount.itms():
+    for w, bc in apcount.items():
         frac = float(bc) / len(feedlist)
         if frac > 0.1 and frac < 0.5:
             wordlist.append(w)
