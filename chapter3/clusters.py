@@ -46,3 +46,20 @@ def pearson(v1, v2):
         return 0
 
     return 1.0 - num / den
+
+# Each cluster in a hierarchical clustering algorithm is either a point in
+# the tree with two branches, or an endpoint associated with an actual row
+# from the dataset (in this case, a blog).
+# Each cluster also contains data about its location,which is either the
+# row data for the endpoints or the merged data from its two branches for
+# other node types.
+
+
+class bicluster:
+
+    def __init__(self, vec, left=None, right=None, distance=0.0, id=None):
+        self.left = left
+        self.right = right
+        self.vec = vec
+        self.id = id
+        self.distance = distance
