@@ -283,6 +283,26 @@ def kcluster(rows, distance=pearson, k=4):
 
     return bestmatches
 
+# for dataset having only 1s and 0s for presence or absence,it would be
+# more useful to define some measure of overlap between the people who
+# want two items.
+# For this,there is a measure called the Tanimoto coefficient,which is the
+# ration of the intersection set (only the items that are in both sets) to
+# the union set (all the items in either set).
+
+
+def tanamoto(v1, v2):
+    c1, c2, shr = 0, 0, 0
+
+    for i in xrange(len(v2)):
+        if v1[i] != 0:
+            c1 += 1  # in v1
+        if v2[i] != 0:
+            c2 += 1  # in v2
+        if v1[i] != 0 and v2[i] != 0:
+            shr += 1  # in both
+
+    return 1.0 - (float(shr) / (c1 + c2 - shr))
 
 if __name__ == "__main__":
     blogname, words, data = readfile("blogdata.txt")
