@@ -194,15 +194,16 @@ try:
             # Line length
             ll = clust.distance * scaling
             # Vertical line from this cluster to children
-            draw.line((x, top + h1 / 2, x, bottom - h2 / 2), fill=(255, 0, 0))
+            draw.line((x, top + h1 / 2, x, bottom - h2 / 2),
+                      fill=(255, 0, 0))
 
             # Horizontal line to left item
             draw.line(
                 (x, top + h1 / 2, x + ll, top + h1 / 2), fill=(255, 0, 0))
 
             # Horizontal line to right item
-            draw.line(
-                (x, bottom - h2 / 2, x + ll, bottom - h2 / 2), fill=(255, 0, 0))
+            draw.line((x, bottom - h2 / 2, x + ll, bottom - h2 / 2),
+                      fill=(255, 0, 0))
 
             # Call the function to draw the left and right nodes
             drawnode(draw, clust.left, x + ll, top + h1 / 2, scaling, labels)
@@ -229,12 +230,69 @@ def rotatematrix(data):
 
     return newdata
 
+# K-Means Clustering
+# Initialization:randomly place k centroids,and assigns every item to the
+# nearest one.
+# Maintenance: move the centroids to the average location of all the nodes
+# assigned to them,and the assignments are redone.
+# Termination:the assignments stop changing.
+import random
+
+
+def kcluster(rows, distance=pearson, k=4):
+    # Determine the minimum and maximum values for each input
+    ranges = [(min([row[i] for row in rows]),
+               max([row[i] for row in rows]))
+              for i in xrange(len(rows[0]))]
+
+    # Create k randomly placed centroids
+    clusters = [[random.random() * (ranges[i][1] - ranges[i][0]) +
+                 ranges[i][0]
+                 for i in xrange(len(rows[0]))] for j in xrange(k)]
+
+    lastmatches = None
+    for t in xrange(100):
+        print 'Iteration %d' % t
+        bestmatches = [[] for t in xrange(k)]
+
+        # Find which centroid is the closest for each row
+        for j in range(len(rows)):
+            row = rows[j]
+            bestmatch = 0
+            for i in range(k):
+                d = distance(clusters[i], row)
+                if d < distance(clusters[bestmatch], row):
+                    bestmatch = i
+            bestmatches[bestmatch].append(j)
+
+        # if the results are the same as last time,this is complete
+        if bestmatches == lastmatches:
+            break
+        lastmatches = bestmatches
+
+        # Move the centroids to the average of their members
+        for i in xrange(k):
+            avgs = [0.0] * len(rows[0])
+            if len(bestmatches[i]) > 0:
+                for rowid in bestmatches[i]:
+                    for m in xrange(len(rows[rowid])):
+                        avgs[m] += rows[rowid][m]
+                for j in xrange(len(avgs)):
+                    avgs[j] /= len(bestmatches[i])
+                clusters[i] = avgs
+
+    return bestmatches
+
+
 if __name__ == "__main__":
     blogname, words, data = readfile("blogdata.txt")
     clust = hcluster(data)
     printclust(clust, labels=blogname)
 
-    drawdendrogram(clust, blogname, jpeg='blogcluster.jpg')
-    rdata = rotatematrix(data)
-    wordclust = hcluster(rdata)
-    drawdendrogram(wordclust, labels=words, jpeg='wordclust.jpg')
+    # drawdendrogram(clust, blogname, jpeg='blogcluster.jpg')
+    # rdata = rotatematrix(data)
+    # wordclust = hcluster(rdata)
+    # drawdendrogram(wordclust, labels=words, jpeg='wordclust.jpg')
+
+    kclust = kcluster(data, k=10)
+    print[blogname[r] for r in kclust[0]]
