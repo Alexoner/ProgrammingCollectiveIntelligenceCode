@@ -103,6 +103,22 @@ class crawler:
         self.con.execute('create index urlfromidx on link(fromid)')
         self.dbcommit()
 
+    def gettextonly(self, soup):
+        v = soup.string
+        if v == None:
+            c = soup.contents
+            resulttext = ''
+            for t in c:
+                subtext = self.gettextonly(t)
+                resulttext += subtext + '\n'
+            return resulttext
+        else:
+            return v.strip()
+
+    def separatewords(self, text):
+        splitter = re.compile('\\W*')
+        return [s.lower() for s in splitter.split(text) if s != '']
+
 if __name__ == "__main__":
     pagelist = ['http://www.geeksforgeeks.org']
     crawler = crawler('')
