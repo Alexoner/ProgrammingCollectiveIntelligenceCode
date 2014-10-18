@@ -208,6 +208,8 @@ class searcher:
 
         return rows, wordids
 
+    # Content-Based Ranking
+    #
     # Take a query,get the rows,put them in a dictionary,and display
     # them in a formatted list.
     def getscoredlist(self, rows, wordids):
@@ -236,6 +238,21 @@ class searcher:
         for (score, urlid) in rankedscores[0:20]:
             print '%f\t%s' % (score, self.geturlname(urlid))
 
+    # Normalized function
+    # take a dictionary of IDs and scores and return a new dictionary
+    # with the same IDs,but with the scores between 0 and 1.
+    def normalizedscores(self, scores, smallIsBetter=0):
+        vsmall = 0.00001  # Avoid division by zero errors
+        if smallIsBetter:
+            minscore = min(scores.values())
+            return dict([(u, float(minscore) / max(vsmall, l))
+                         for (u, l) in scores.items()])
+        else:
+            maxscore = max(scores.values())
+            if maxscore == 0:
+                maxscore = vsmall
+            return dict([(u, float(c) / maxscore)
+                         for (u, c) in scores.items()])
 
 if __name__ == "__main__":
     pagelist = ['http://www.geeksforgeeks.org', 'http://leetcode.com']
