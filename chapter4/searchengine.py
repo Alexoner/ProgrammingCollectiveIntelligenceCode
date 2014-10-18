@@ -208,13 +208,43 @@ class searcher:
 
         return rows, wordids
 
+    # Take a query,get the rows,put them in a dictionary,and display
+    # them in a formatted list.
+    def getscoredlist(self, rows, wordids):
+        totalscores = dict([(row[0], 0) for row in rows])
+
+        # This is scoring function
+        weights = []
+
+        for (weight, scores) in weights:
+            for url in totalscores:
+                totalscores[url] += weight * scors[url]
+
+        return totalscores
+
+    def geturlname(self, id):
+        return self.con.execute(
+            "select url from urllist where rowid=%d" % id).fetchone()[0]
+
+    def query(self, q):
+        rows, wordids = self.getmatchrows(q)
+        scores = self.getscoredlist(rows, wordids)
+        rankedscores = sorted([(score, url)
+                               for (url, score) in scores.items()],
+                              reverse=1)
+
+        for (score, urlid) in rankedscores[0:20]:
+            print '%f\t%s' % (score, self.geturlname(urlid))
+
 
 if __name__ == "__main__":
     pagelist = ['http://www.geeksforgeeks.org', 'http://leetcode.com']
     # pagelist = ['http://leetcode.com']
-    crawler = crawler('searchindex.db')
-    crawler.createindextables()
-    crawler.crawl(pagelist)
+    # crawler = crawler('searchindex.db')
+    # crawler.createindextables()
+    # crawler.crawl(pagelist)
 
     e = searcher('searchindex.db')
-    print e.getmatchrows('dynamic programming')
+    # print e.getmatchrows('dynamic programming')
+    e.query('dynamic programming')
+    e.query('graph algorithms')
