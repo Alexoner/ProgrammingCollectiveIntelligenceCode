@@ -156,9 +156,65 @@ class crawler:
         splitter = re.compile('\\W*')
         return [s.lower() for s in splitter.split(text) if s != '']
 
+
+# set up the search part of the search engine
+class searcher:
+
+    def __init__(self, dbname):
+        self.con = sqlite.connect(dbname)
+
+    def __del__(self):
+        self.con.close()
+
+    # The wordlocation table gives us an easy way to link words to tables.
+    # A query function that takes a query string,split it into separate
+    # words,and construct a SQL query to find only those URLs containing
+    # all the different words.
+    # This function creates a reference to the wordlocation  table for
+    # each word in the list and joining them all on their URL IDs.
+    def getmatchrows(self, q):
+        # Strings to build the query
+        fieldlist = 'w0.urlid'
+        tablelist = ''
+        clauselist = ''
+        wordids = []
+
+        # Split the words by spaces
+        words = q.split(' ')
+        tablenumber = 0
+
+        for word in words:
+            # Get the word ID
+            wordrow = self.con.execute(
+                "select rowid from wordlist where word='%s'" % word).fetchone()
+            if wordrow != None:
+                wordid = wordrow[0]
+                wordids.append(wordid)
+                if tablenumber > 0:
+                    tablelist += ','
+                    clauselist += ' and '
+                    clauselist += 'w%d.urlid=w%d.urlid and ' % (
+                        tablenumber - 1, tablenumber)
+                fieldlist += ',w%d.location' % tablenumber
+                tablelist += 'wordlocation w%d' % tablenumber
+                clauselist += 'w%d.wordid=%d' % (tablenumber, wordid)
+                tablenumber += 1
+
+        # Create the query from the sepratate parts
+        fullquery = 'select %s from %s where %s' % (
+            fieldlist, tablelist, clauselist)
+        cur = self.con.execute(fullquery)
+        rows = [row for row in cur]
+
+        return rows, wordids
+
+
 if __name__ == "__main__":
-    # pagelist = ['http://www.geeksforgeeks.org']
-    pagelist = ['http://leetcode.com']
+    pagelist = ['http://www.geeksforgeeks.org', 'http://leetcode.com']
+    # pagelist = ['http://leetcode.com']
     crawler = crawler('searchindex.db')
     crawler.createindextables()
     crawler.crawl(pagelist)
+
+    e = searcher('searchindex.db')
+    print e.getmatchrows('dynamic programming')
