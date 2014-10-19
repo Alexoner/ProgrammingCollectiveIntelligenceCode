@@ -89,7 +89,21 @@ class crawler:
 
     # Add a link between two pages
     def addlinkref(self, urlFrom, urlTo, linkText):
-        pass
+        linkwords = self.separatewords(linkText)
+        fromid = self.getentryid('urllist', 'url', urlFrom)
+        toid = self.getentryid('urllist', 'url', urlTo)
+        if fromid == toid:
+            return
+        cur = self.con.execute(
+            "insert into link(fromid,toid) values(%d,%d)" % (fromid, toid))
+        linkid = cur.lastrowid
+        for word in linkwords:
+            if word in ignorewords:
+                continue
+            wordid = self.getentryid('wordlist', 'word', word)
+            self.con.execute(
+                "insert into linkwords(linkid,wordid) values(%d,%d)" %
+                (linkid, wordid))
 
     # Starting with a list of pages,do a breadth first search to the given
     # depth,indexing pages as we go
@@ -155,6 +169,41 @@ class crawler:
     def separatewords(self, text):
         splitter = re.compile('\\W*')
         return [s.lower() for s in splitter.split(text) if s != '']
+
+    # The PageRank Algorithm
+    # The importance of the page is calculated form the importance of
+    # all the other pages that link to it and from the number of links
+    # each of the other pages has.
+    # Implementation:initialization,iterate to get closer
+    def calculatepagerank(self, iterations=20):
+        # clear out the current PageRank tables
+        self.con.execute('drop table if exists pagerank')
+        self.con.execute('create table pagerank(urlid primary key,score)')
+
+        # initialize every url with a PageRank of 1
+        self.con.execute('insert into pagerank select rowid,1.0 from urllist')
+        self.dbcommit
+
+        for i in range(iterations):
+            print 'Iteration %d ' % (i)
+            for (urlid,) in self.con.execute('select rowid from urllist'):
+                pr = 0.15
+
+                # Loop through all the pages that link to this one
+                for (linker,) in self.con.execute(
+                        'select distinct fromid from link where toid=%d' % urlid):
+                    # Get the PageRank of the linker
+                    linkingpr = self.con.execute(
+                        'select score from pagerank where urlid=%d' % linker).fetchone()[0]
+
+                    # Get the total number of links from the linker
+                    linkingcount = self.con.execute(
+                        'select count(*) from link where fromid=%d' % linker).fetchone()[0]
+                    pr += 0.85 * (linkingpr / linkingcount)
+                    self.con.execute(
+                        'update pagerank set score=%d where urlid=%d' %
+                        (pr, urlid))
+            self.dbcommit()
 
 
 # set up the search part of the search engine
@@ -224,7 +273,8 @@ class searcher:
         #
         weights = [(1.0, self.frequencescore(rows)),
                    (1.5, self.locationscore(rows)),
-                   (1.0, self.distancescore(rows))]
+                   (1.0, self.distancescore(rows)),
+                   (1.0, self.pagerankscore(rows))]
 
         for (weight, scores) in weights:
             for url in totalscores:
@@ -310,15 +360,38 @@ class searcher:
 
         return self.normalizedscores(mindistance, smallIsBetter=1)
 
+    # Using Inbound Links
+    # Scoring Metrics: content-based,inbound links analysis
+
+    # Simple count
+    def inboundlinkscore(self, rows):
+        uniqueurls = set([row[0] for row in rows])
+        inboundcount = dict([(u, self.con.execute(
+                              "select count(*) from link where toid=%d" % u).fetchone()[0])
+                             for u in uniqueurls])
+        return self.normalizedscores(inboundcount)
+
+    # pagerank score
+    def pagerankscore(self, rows):
+        pageranks = dict([(row[0], self.con.execute(
+            'select score from pagerank where urlid=%d' %
+            row[0]).fetchone()[0]) for row in rows])
+        maxrank = max(pagerank.values())
+        normalizedscores = dict([(u, float(l) / maxrank)
+                                 for (u, l) in pageranks.items()])
+        return normalizedscores
+
 
 if __name__ == "__main__":
     pagelist = ['http://www.geeksforgeeks.org', 'http://leetcode.com']
     # pagelist = ['http://leetcode.com']
     crawler = crawler('searchindex.db')
-    # crawler.createindextables()
-    # crawler.crawl(pagelist, 3)
+    crawler.createindextables()
+    crawler.crawl(pagelist, 3)
 
     e = searcher('searchindex.db')
     # print e.getmatchrows('dynamic programming')
-    e.query('dynamic programming')
-    e.query('graph algorithms')
+    # e.query('dynamic programming')
+    # e.query('graph algorithms')
+    # e.query('longest increasing subsequence')
+    e.query('optimal substructure')
