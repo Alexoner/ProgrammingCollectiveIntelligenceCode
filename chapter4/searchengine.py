@@ -278,8 +278,8 @@ class searcher:
         weights = [(1.0, self.frequencescore(rows)),
                    (1.5, self.locationscore(rows)),
                    (1.0, self.distancescore(rows)),
-                   (1.0, self.pagerankscore(rows))]
-                   #(1.0, self.linktextscore(rows, wordids))]
+                   (1.0, self.pagerankscore(rows)),
+                   (1.0, self.linktextscore(rows, wordids))]
 
         for (weight, scores) in weights:
             for url in totalscores:
@@ -401,10 +401,12 @@ class searcher:
                                    wordid)
             for (fromid, toid) in cur:
                 if toid in linkscores:
-                    pr = self.execute('select score from pagerank where \
-                                      urlid=%d' % fromid).fetchone()[0]
+                    pr = self.con.execute(
+                        'select score from pagerank \
+                        where urlid=%d' % fromid).fetchone()[0]
                     linkscores[toid] += pr
         maxscore = max(linkscores.values())
+        maxscore = max(maxscore, 0.0000001)
         normalizedscores = dict([(u, float(l) / maxscore)
                                  for (u, l) in linkscores.items()])
         return normalizedscores
@@ -415,11 +417,11 @@ if __name__ == "__main__":
     crawler = crawler('searchindex.db')
     # crawler.createindextables()
     # crawler.crawl(pagelist, 3)
-    crawler.calculatepagerank()
+    # crawler.calculatepagerank()
 
     e = searcher('searchindex.db')
     # print e.getmatchrows('dynamic programming')
-    # e.query('dynamic programming')
+    e.query('dynamic programming')
     # e.query('graph algorithms')
     # e.query('longest increasing subsequence')
     e.query('optimal substructure')
