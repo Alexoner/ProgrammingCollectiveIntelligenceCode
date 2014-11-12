@@ -1,4 +1,4 @@
-ProgrammingCollectiveIntelligenceCode
-=====================================
+Code for Learning Artificial Intelligence
+=========================================
 
-Code of Programming Collective Intelligence.
+1. Code of Programming Collective Intelligence.
