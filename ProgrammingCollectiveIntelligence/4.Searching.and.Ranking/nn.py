@@ -84,13 +84,90 @@ class searchnet:
                 self.setstrength(hiddenid, urlid, 1, 0.1)
             self.con.commit()
 
+    def getallhiddenids(self, wordids, urlids):
+        """
+        Before running the feedforward algorithm,the class will have to
+        query the nodes and connections in the database,and build,in
+        memory,the portion of the network that is relevant to a specific
+        query.
+        """
+        li = {}
+        for wordid in wordids:
+            cur = self.con.execute(
+                'select toid from wordhidden where fromid=%d' % wordid)
+            for row in cur:
+                li[row[0]] = 1
+        for urlid in urlids:
+            cur = self.con.execute(
+                'select fromid from hiddenurl where toid=%d' % urlid)
+            for row in cur:
+                li[row[0]] = 1
+        return li.keys()
+
+    def setupnetwork(self, wordids, urlids):
+        """
+        Construct the relevant neural network with all the current weights
+        from the database.
+        """
+        # value lists
+        self.wordids = wordids
+        self.hiddenids = self.getallhiddenids(wordids, urlids)
+        self.urlids = urlids
+
+        # node outputs
+        self.ai = [1.0] * len(self.wordids)
+        self.ah = [1.0] * len(self.hiddenids)
+        self.ao = [1.0] * len(self.urlids)
+
+        # create weights matrix
+        self.wi = [[self.getstrength(wordid, hiddenid, 0)
+                    for hiddenid in self.hiddenids]
+                   for wordid in self.wordids]
+        self.wo = [[self.getstrength(hiddenid, urlid, 1)
+                    for urlid in self.urlids]
+                   for hiddenid in self.hiddenids]
+
+    def feedforward(self):
+        """
+        Take a list of inputs,pushes them through the network,and
+        returns the output of all the nodes in the output layer.
+        Use tanh here as a sigmoid function.
+        """
+        # the only inputs are the query words
+        # for i in range(len(self.wordids)):
+            # self.ai[i] = 1.0
+
+        # hidden activations
+        for j in range(len(self.hiddenids)):
+            sum = 0.0
+            for i in range(len(self.wordids)):
+                sum = sum + self.ai[i] * self.wi[i][j]
+            self.ah[j] = tanh(sum)
+
+        # output activations
+        for k in range(len(self.urlids)):
+            sum = 0.0
+            for j in range(len(self.hiddenids)):
+                sum = sum + self.ah[j] * self.wo[j][k]
+            self.ao[k] = tanh(sum)
+
+        return self.ao[:]
+
+    def getresult(self, wordids, urlids):
+        self.setupnetwork(wordids, urlids)
+        return self.feedforward()
+
+
 if __name__ == "__main__":
     mynet = searchnet('nn.db')
     # mynet.maketables()
+
     wWorld, wRiver, wBank = 101, 102, 103
     uWorldBank, uRiver, uEarth = 201, 202, 203
     mynet.generatehiddennode([wWorld, wBank], [uWorldBank, uRiver, uEarth])
-    for c in mynet.con.execute('select * from wordhidden'):
-        print c
-    for c in mynet.con.execute('select * from hiddenurl'):
-        print c
+    # for c in mynet.con.execute('select * from wordhidden'):
+        # print c
+    # for c in mynet.con.execute('select * from hiddenurl'):
+        # print c
+
+    print mynet.getresult([wWorld, wBank], [uWorldBank, uRiver, uEarth])
