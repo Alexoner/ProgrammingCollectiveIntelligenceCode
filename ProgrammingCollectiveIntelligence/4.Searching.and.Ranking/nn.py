@@ -243,3 +243,14 @@ if __name__ == "__main__":
 
     mynet.trainquery([wWorld, wBank], [uWorldBank, uRiver, uEarth], uWorldBank)
     print mynet.getresult([wWorld, wBank], [uWorldBank, uRiver, uEarth])
+
+    # training test
+    allurls = [uWorldBank, uRiver, uEarth]
+    for i in range(30):
+        mynet.trainquery([wWorld, wBank], allurls, uWorldBank)
+        mynet.trainquery([wRiver, wBank], allurls, uRiver)
+        mynet.trainquery([wWorld], allurls, uEarth)
+
+    print mynet.getresult([wWorld, wBank], allurls)
+    print mynet.getresult([wRiver, wBank], allurls)
+    print mynet.getresult([wBank], allurls)
