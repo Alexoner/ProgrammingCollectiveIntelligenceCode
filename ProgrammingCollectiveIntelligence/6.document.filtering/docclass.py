@@ -87,3 +87,13 @@ class classifier:
 
         # Increment the count for this category
         self.incc(cat)
+
+if __name__ == "__main__":
+    cl = classifier(getwords)
+    cl.train('the quick brown for jumps over the lazy dog', 'good')
+    cl.train('make quick money in the online casino', 'bad')
+    cl.train('Nobody owns the water', 'good')
+    cl.train('the quick rabbit jumps fences', 'good')
+    cl.train('buy pharmaceuricals now', 'bad')
+    print cl.fcount('quick', 'good')
+    print cl.fcount('quick', 'bad')
