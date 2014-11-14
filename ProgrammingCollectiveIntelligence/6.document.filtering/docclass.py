@@ -18,3 +18,72 @@ def getwords(doc):
 
     # return the unique set of words only
     return dict([(w, 1) for w in words])
+
+
+class classifier:
+
+    """
+    Represent the classifier.This class encapsulate what the classifier
+    has learned so far.
+    Methods won't use the dictionaries directly because this restricts
+    potential options for storing the training data in a file or database.
+    """
+
+    def __init__(self, getfeatures, filename=None):
+        # Counts of feature/category combinations
+        self.fc = {}
+        # Counts of documents in each category
+        self.cc = {}
+        self.getfeatures = getfeatures
+
+    def incf(self, f, cat):
+        """
+        Increase the count of a feature/category pair
+        """
+        self.fc.setdefault(f, {})
+        self.fc[f].setdefault(cat, 0)
+        self.fc[f][cat] += 1
+
+    def incc(self, cat):
+        """
+        increase the count of a category
+        """
+        self.cc.setdefault(cat, 0)
+        self.cc[cat] += 1
+
+    def fcount(self, f, cat):
+        """
+        The number of times a feature has appeared in a category
+        """
+        if f in self.fc and cat in self.fc[f]:
+            return float(self.fc[f][cat])
+        return 0.0
+
+    def catcount(self, cat):
+        """
+        The number of items in a category
+        """
+        if cat in self.cc:
+            return float(self.cc[cat])
+        return 0.0
+
+    def totalcount(self):
+        """
+        The total number of items
+        """
+        return sum(self.cc.values())
+
+    def categories(self):
+        """
+        The list of all categories
+        """
+        return self.cc.keys()
+
+    def train(self, item, cat):
+        features = getwords(item)
+        # Increment the count of every count feature with this category
+        for f in features:
+            self.incf(f, cat)
+
+        # Increment the count for this category
+        self.incc(cat)
