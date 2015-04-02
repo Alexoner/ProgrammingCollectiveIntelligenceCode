@@ -14,6 +14,7 @@
 ### matlab,javascript,python implemented algorithm
 ### kaggle,KDD and other competitions
 ### CUDA implemented algorithm
+Especially Convolutional neural networks
 
 
   
