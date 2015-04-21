@@ -1,4 +1,4 @@
-# TO DO schedule
+# schedule
 
 ## Theory cover
 
@@ -15,6 +15,7 @@
 ### kaggle,KDD and other competitions
 ### CUDA implemented algorithm
 Especially Convolutional neural networks
+### Extracting information from text(sequence labeling,conditional random fields,HMM,information extraction)
 
 
   
