@@ -3,12 +3,12 @@
 clear; close all;
 n = 100;
 beta = 1e-1;
-X = rand(1,n);
+X = rand(n,1);
 w = randn;
 b = randn;
-t = w'*X+b+beta*randn(1,n);
+t = w'*X+b+beta*randn(n,1);
 
-x = linspace(min(X)-1,max(X)+1,n);   % test data
+x = linspace(min(X)-1,max(X)+1,n)';   % test data
 %%
 model = regress(X, t);
 y = linInfer(x, model);

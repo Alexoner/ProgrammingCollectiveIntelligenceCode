@@ -1,23 +1,33 @@
 function model = regress(X, t, lambda)
 % Fit linear regression model t=w'x+b
-% X: d x n data
-% t: 1 x n response
+% X: n x d data
+% t: n x 1 response
 if nargin < 3
     lambda = 0;
 end
-d = size(X,1);
-xbar = mean(X,2);
-tbar = mean(t,2);
 
+% dimension of x
+d = size(X,2);
+xbar = mean(X,1);
+tbar = mean(t,1);
+
+% subtract by mean to normalize the data
 X = bsxfun(@minus,X,xbar);
 t = bsxfun(@minus,t,tbar);
 
-S = X*X';
+% covariance matrix
+S = X'*X;
+% sub2ind:convert subscripts to a linear index
 dg = sub2ind([d,d],1:d,1:d);
 S(dg) = S(dg)+lambda;
 % w = S\(X*t');
 R = chol(S);
-w = R\(R'\(X*t'));  % 3.15 & 3.28
+
+% X\Y = mldivide(X,Y): matrix left divide
+% solve linear equation Ax=B for x = A\B
+% w = R\(R'\(X*t'));  % 3.15 & 3.28
+ w = inv(X'*X)*X'*t
+%w = X'\(X\(X*t'));
 b = tbar-dot(w,xbar);  % 3.19
 
 model.w = w;
