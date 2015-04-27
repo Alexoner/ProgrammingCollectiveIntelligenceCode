@@ -19,6 +19,7 @@ t = bsxfun(@minus,t,tbar);
 S = X'*X;
 % sub2ind:convert subscripts to a linear index
 dg = sub2ind([d,d],1:d,1:d);
+% add regularization quantity,lambda*I.(3.28)
 S(dg) = S(dg)+lambda;
 % w = S\(X*t');
 R = chol(S);
