@@ -12,6 +12,10 @@
   - ~~PCA~~
 
 ### Galman - Bayesian Data analysis,3rd
+
+### MOOC
+  - CMU ML
+  - etc.
   
 ## Practice
 ### matlab,javascript,python implemented algorithm
