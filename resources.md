@@ -1235,3 +1235,11 @@ Angle Regression</li>
 </ul>
 
 </div>
+
+
+## [Communities](http://machinelearningmastery.com/machine-learning-communities/)
+    - [quora](http://www.quora.com/pinned/Machine-Learning)
+    - [learningMachines 101](http://learningmachines101.com/)
+    - [fastml](http://fastml.com/machine-learning-courses-online/)
+    - [machinelearningingmastery](http://machinelearningmastery.com/machine-learning-communities/)
+    - [Google+](https://plus.google.com/communities/107785538899595981479)
