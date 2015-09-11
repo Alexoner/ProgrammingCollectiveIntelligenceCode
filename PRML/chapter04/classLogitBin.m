@@ -17,7 +17,7 @@ if nargin < 3
     lambda = 1e-4;
 end
 [n,d] = size(X)
-% sub2ind: subscripts to linear index
+% sub2ind: subscripts to linear index.Get diagonal indices
 dg = sub2ind([d,d],1:d,1:d);
 %X = [X; ones(1,n)];
 X = [ones(n,1),X];
@@ -56,11 +56,12 @@ while ~converged && iter < maxiter
     wo = w;
     w = wo+p;
     a = X*w;   
+    % regularized (posterior) optimization
     llh(iter) = -sum(log1pexp(-h.*a))-0.5*lambda*dot(w,w);
     converged = norm(p) < tol || abs(llh(iter)-llh(iter-1)) < tol
+    % in case the descent iteration diverge
     while ~converged && llh(iter) < llh(iter-1)
-        disp(p);
-        p = 0.5*p;
+        p = 0.5*p
         w = wo+p;
         a = X*w;    
         llh(iter) = -sum(log1pexp(-h.*a))-0.5*lambda*dot(w,w);

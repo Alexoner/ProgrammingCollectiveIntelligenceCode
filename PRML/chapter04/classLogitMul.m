@@ -20,6 +20,7 @@ model.W = W;
 function [W, llh] = NewtonSolver(X, t, lambda)
 
 [d,n] = size(X);
+% k class labels
 k = max(t);
 
 tol = 1e-4;
@@ -35,7 +36,9 @@ HT = zeros(d,k,d,k);
 while ~converged && iter < maxiter
     iter = iter+1;
     Z = X'*W;
-    logY = bsxfun(@minus,Z,logsumexp(Z,2));
+    % logsumexp(X,dim):computing log(sum(exp(x),dim)) avoiding numerical underflow
+    %logY = bsxfun(@minus,Z,logsumexp(Z,2));
+    logY = softmax(Z,2);
     llh(iter) = dot(T(:),logY(:))-0.5*lambda*dot(W(:),W(:));
     converged = abs(llh(iter)-llh(iter-1)) < tol;
     
