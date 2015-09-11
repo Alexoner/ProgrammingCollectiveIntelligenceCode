@@ -13,6 +13,9 @@ d = d+1;
 
 tol = 1e-4;
 maxiter = 100;
+% inf():
+% Return a scalar, matrix or N-dimensional array whose elements are
+% all equal to the IEEE representation for positive infinity
 llh = -inf(1,maxiter);
 converged = false;
 iter = 1;

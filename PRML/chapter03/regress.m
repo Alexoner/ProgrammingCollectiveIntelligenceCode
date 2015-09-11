@@ -2,6 +2,8 @@ function model = regress(X, t, lambda)
 % Fit linear regression model t=w'x+b
 % X: d x n data
 % t: 1 x n response
+% model.w: weight vector
+% model.b: bias
 if nargin < 3
     lambda = 0;
 end

@@ -17,6 +17,7 @@ hold on;
 plot(X,t,'o');
 plot(x,y,'r-');
 hold off
+pause;
 %%
 [model,llh] = regressEbEm(X,t);
 [y, sigma] = linInfer(x,model,t);
