@@ -15,7 +15,7 @@ t = t';
 %   XX: copies of rows from X, as one dimension's coordinate;
 %   YY: copies of columns from Y,another dimension's coordinate
 [x1,x2] = meshgrid(linspace(min(X(:,1)),max(X(:,1)),n), linspace(min(X(:,2)),max(X(:,2)),n));
-[model, llh] = classLogitBin(X,t-1,1e+1);
+[model, llh] = classLogitBin(X,t-1,1e-1);
 plot(llh);
 figure;
 spread(X',t');
@@ -36,16 +36,19 @@ pause;
  k = 3;
  n = 1000;
  [X,t] = rndKCluster(2,k,n);
+ X = X';
+ t = t';
  
- [x1,x2] = meshgrid(linspace(min(X(1,:)),max(X(1,:)),n), linspace(min(X(2,:)),max(X(2,:)),n));
- [model, llh] = classLogitMul(X,t);
+ [x1,x2] = meshgrid(linspace(min(X(:,1)),max(X(:,1)),n), linspace(min(X(:,2)),max(X(:,2)),n));
+ [model, llh] = classLogitMul(X,t,1e-1,2);
  plot(llh);
  figure;
- spread(X,t);
+ spread(X',t');
  
  W = model.W;
-y = W(1)*x1+W(2)*x2+W(3);
+%y = W(1)*x1+W(2)*x2+W(3);
+y = W(1) + W(2)*x1 + W(3)*x2;
  
  hold on;
- contour(x1,x2,y,1);
+ contour(x1,x2,y,2);
  hold off;
