@@ -6,7 +6,7 @@ function [model, llh] = classLogitBin(X, t, lambda)
 % @t: n*1 response
 % @lambda: regularization coefficient
 % @model:
-% @llh: likelihood function
+% @llh: log-likelihood function
 
 % any(): return true if any element of the vector is non-zero
 if any(unique(t) ~= [0;1])
@@ -58,10 +58,10 @@ while ~converged && iter < maxiter
     a = X*w;   
     % regularized (posterior) optimization
     llh(iter) = -sum(log1pexp(-h.*a))-0.5*lambda*dot(w,w);
-    converged = norm(p) < tol || abs(llh(iter)-llh(iter-1)) < tol
+    converged = norm(p) < tol || abs(llh(iter)-llh(iter-1)) < tol;
     % in case the descent iteration diverge
     while ~converged && llh(iter) < llh(iter-1)
-        p = 0.5*p
+        p = 0.5*p;
         w = wo+p;
         a = X*w;    
         llh(iter) = -sum(log1pexp(-h.*a))-0.5*lambda*dot(w,w);

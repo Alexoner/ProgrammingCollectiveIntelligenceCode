@@ -15,6 +15,9 @@ x = reshape(x,1,n);
 %   I and J: integer index vectors,
 %   SV: a 1-by-'nnz' vector of real complex values 
 %   M and N:overall dimension of the sparse matrix
+%   construct sparse matrix :
+%   S(I(K),J(K)) = SV(K) or SV if SV is scalar
+%   with overall dimensions M,N.
 
 % mean(X,DIM,OPT):
 %   compute the mean of the elements of the vector X along DIM dimension
