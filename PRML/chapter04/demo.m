@@ -5,6 +5,7 @@ clear; close all;
 k = 2;
 n = 1000;
 [X,t] = rndKCluster(2,k,n);
+% convert design matrix to n-by-d,target vector to n-by-1
 X = X';
 t = t';
 
@@ -40,7 +41,7 @@ pause;
  t = t';
  
  [x1,x2] = meshgrid(linspace(min(X(:,1)),max(X(:,1)),n), linspace(min(X(:,2)),max(X(:,2)),n));
- [model, llh] = classLogitMul(X,t,1e-1,2);
+ [model, llh] = classLogitMul(X,t,1e-3,2);
  plot(llh);
  figure;
  spread(X',t');
