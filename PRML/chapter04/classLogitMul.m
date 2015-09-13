@@ -91,12 +91,15 @@ while ~converged && iter < maxiter
 
         % gradient(first-order derivative),d*1 column vector
         g = X'*(Y(:,j)-T(:,j))+lambda*W(j,:)';
+        % update weight matrix(vector here)
         W(j,:) = (W(j,:)'-H\g)';
         Z(:,j) = X*W(j,:)';
+        % compute prediction
         logY = bsxfun(@minus,Z,logsumexp(Z,2));
         Y = exp(logY);
     end
     
+    % compute likelihood function
     llh(iter) = dot(T(:),logY(:))-0.5*lambda*dot(W(:),W(:));
     converged = abs(llh(iter)-llh(iter-1)) < tol;
 end
