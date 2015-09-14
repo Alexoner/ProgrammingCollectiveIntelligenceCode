@@ -19,7 +19,7 @@ while iter < maxiter && any(label ~= last)
     [~,label] = max(bsxfun(@minus,X*m',dot(m',m',1)/2),[],2); % assign samples to the nearest centers
     E = sparse(1:n,label,1,n,k,n); % transform label into n-by-k indicator(latent variable) matrix
     m = (E*spdiags(1./sum(E,1)',0,k,k))'*X;    % compute m of each cluster
-    iter = iter + 1
+    iter = iter + 1;
     if dot(last,label,1) < tol,
         disp(last)
         disp(label)
