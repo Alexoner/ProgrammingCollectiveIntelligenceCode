@@ -9,8 +9,41 @@ License
 -------
 Currently Released Under GPLv3
 
+TODO
+----
+- [ ] Linear Models for Regression
+  - [x] Maximum Likelihood
+  - [x] Maximum Posterior
+  - [ ] Bayesian Linear Regression
+  - [ ] EM algorithm for Bayesian Linear Regression
+
+- [ ] Linear Models for Classification
+  - [x] Maximum Likelihood
+  - [x] Maximum Posterior
+  - [ ] Bayesian Linear Regression
+
+- [ ] Neural Networks
+  - [ ] Back-propagation Neural Networks
+  - [ ] Convolutional Neural Networks
+
+- [ ] Kernel Methods
+  - [ ] SVM
+  - [ ] RVM
+
+- [ ] EM algorithm
+  - [x] K-means
+  - [x] GMM
+  - [ ] Bernoulli Mixture Model
+  - [ ] Multinomial Mixture Model
+
+- [ ] Sequential data
+  - [ ] HMM
+  - [ ] Kalman filter
+
+
 
 Contact
 -------
 sth4nth at gmail dot com
+onerhao at gmail dot com
 
