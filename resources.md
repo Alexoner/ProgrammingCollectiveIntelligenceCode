@@ -644,6 +644,7 @@ Statistics and Estimation for
 Social Scientists</a></li>
   <li><a href="http://users.soe.ucsc.edu/~draper/draper-BMIP-dec2005.pdf">Bayesian Modeling, Inference
 and Prediction</a></li>
+<li><a href="">Introduction to Bayesian Statistics,2nd edition,karl-Rodolf Koch</a></li>
 </ul>
 
 <h4 id="naturual-language-processing">Naturual Language Processing</h4>
