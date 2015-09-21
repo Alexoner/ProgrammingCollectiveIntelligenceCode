@@ -7,20 +7,21 @@ if nargin < 3
 end
 
 % dimension of x
+n = size(X,1);
+X = [ones(n,1) X];
 d = size(X,2);
 xbar = mean(X,1);
 tbar = mean(t,1);
 
 % subtract by mean to normalize the data
-X = bsxfun(@minus,X,xbar);
-t = bsxfun(@minus,t,tbar);
+%X = bsxfun(@minus,X,xbar);
+%t = bsxfun(@minus,t,tbar);
 
-% covariance matrix
 S = X'*X;
 % sub2ind:convert subscripts to a linear index
 dg = sub2ind([d,d],1:d,1:d);
 % add regularization quantity,lambda*I.(3.28)
-S(dg) = S(dg)+lambda;
+S(dg) = S(dg)+lambda
 % w = S\(X*t');
 R = chol(S);
 
@@ -29,7 +30,7 @@ R = chol(S);
 % w = R\(R'\(X*t'));  % 3.15 & 3.28
  w = inv(X'*X)*X'*t
 %w = X'\(X\(X*t'));
-b = tbar-dot(w,xbar);  % 3.19
+%b = tbar-dot(w,xbar);  % 3.19
 
 model.w = w;
-model.b = b;
+%model.b = b;
