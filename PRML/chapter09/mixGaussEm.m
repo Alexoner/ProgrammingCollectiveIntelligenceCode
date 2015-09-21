@@ -5,7 +5,7 @@ function [label, model, llh] = mixGaussEm(X, init)
 %   @label:class labels(latent variables)
 %   @model.mu:k-by-d mean matrix
 %   @model.Sigma: d-by-d-by-k covariance matrix
-%   @model.pik:k-by-1 mixing coefficients
+%   @model.gamma:k-by-1 mixing coefficients
 % Written by Michael Chen (sth4nth@gmail.com),onerhao@gmail.com.
 
 %% initialization
@@ -78,7 +78,7 @@ function [R, llh] = expectation(X, model)
 mu = model.mu;
 Sigma = model.Sigma;
 % mixing coefficients
-w = model.pik;
+w = model.gamma;
 
 n = size(X,1);
 k = size(mu,1);
@@ -126,7 +126,7 @@ end
 
 model.mu = mu;
 model.Sigma = Sigma;
-model.pik = w;
+model.gamma = w;
 
 function y = loggausspdf(X, mu, Sigma)
 % log gaussian probability density function
