@@ -17,18 +17,7 @@ hold on;
 plot(X,t,'o');
 plot(x,y,'r-');
 hold off
-%%
-%[model,llh] = regressEbEm(X',t');
-%[y, sigma] = linInfer(x,model,t);
-%figure;
-%hold on;
-%plotBand(x,y,2*sigma);
-%plot(X,t,'o');
-%plot(x,y,'r-');
-%hold off
-%figure
-%plot(llh);
-%%
+%
 [model,llh] = regressEbFp(X,t);
 [y, sigma] = linInfer(x,model,t);
 figure;
@@ -37,5 +26,16 @@ hold on;
 plot(X,t,'o');
 plot(x,y,'r-');
 hold off
+%figure
+%plot(llh);
+%
+[model,llh] = regressEbEm(X,t);
+[y, sigma] = linInfer(x,model,t);
 figure;
-plot(llh);
+hold on;
+%plotBand(x,y,2*sigma);
+plot(X,t,'o');
+plot(x,y,'r-');
+hold off
+%figure;
+%plot(llh);
