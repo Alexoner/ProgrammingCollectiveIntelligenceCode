@@ -3,7 +3,7 @@ function model = regress(X, t, lambda)
 % X: n x d data
 % t: n x 1 response
 if nargin < 3
-    lambda = 0;
+    lambda = 1e-2;
 end
 
 % dimension of x

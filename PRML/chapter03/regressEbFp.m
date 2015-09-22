@@ -1,7 +1,7 @@
 function [model, llh] = regressEbFp(X, t, alpha, beta)
 % Fit empirical Bayesian linear model with Mackay fixed point method
-% X: d x n data
-% t: 1 x n response
+% X: n x d data
+% t: n x 1 response
 if nargin < 3
     alpha = 0.02;
     beta = 0.5;
