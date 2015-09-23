@@ -322,6 +322,8 @@ Following is a growing list of some of the materials i found on the web for Deep
   <li><a href="http://neuralnetworksanddeeplearning.com/">Neural Networks and Deep Learning</a> by  Michael Nielsen</li>
   <li><a href="http://research.microsoft.com/pubs/209355/DeepLearning-NowPublishing-Vol7-SIG-039.pdf">Deep Learning</a> by Microsoft Research</li>
   <li><a href="http://deeplearning.net/tutorial/deeplearning.pdf">Deep Learning Tutorial</a> by LISA lab, University of Montreal</li>
+  <li><a href="http://shadowsgovernment.com/shadow-library/Jonathan%20Wainwright%20(T/Mandic_Electronic%20(1276)/Mandic_Electronic%20-%20Jonathan%20Wainwright%20(T.pdf"></a>RECURRENT NEURAL NETWORKS FOR PREDICTION</li>
+  <li><a href="#"></a>Neural Networks—A Systematic Introduction Raul Rojas</li>
 </ol>
 
 <h3 id="courses">Courses</h3>
