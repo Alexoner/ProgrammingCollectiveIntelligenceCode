@@ -37,8 +37,9 @@ for iter = 2:maxiter
     llh(iter) = 0.5*(d*log(alpha)+n*log(beta)-alpha*w2-beta*err-logdetA-n*log(2*pi));
     if llh(iter)-llh(iter-1) < tol*abs(llh(iter-1)); break; end
     
+    % compute trace of matrix by dot product
     trS = dot(V(:),V(:));
-    % TODO: prove this
+    % TODO: prove this trS term
     alpha = d/(w2+trS);   % 9.63
     
     gamma = d-alpha*trS;
