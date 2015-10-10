@@ -2,9 +2,9 @@
 % x = rand(10,1000);
 % [model, energy] = dimPcaVb(x);
 d = 3;
-n = 100000;
+n = 100;
 
-k = 2;
+k = 4;
 
 A = normalize(rand(k,k),2);
 E = normalize(rand(k,d),2);
@@ -20,12 +20,9 @@ for i = 2:n
     z(i) = discreternd(A(z(i-1),:));
     x(i) = discreternd(E(z(i),:));
 end
-%X = sparse(1:n,x,1,n,d);
-%M = E*X;
+
+scatter(1:n,x);
 
 [model, energy] = hmmEm(x,k)
-% [alpha,energy] = hmmFwd(M,A,s);
-% beta = hmmBwd(M,A);
-% gamma = normalize(alpha.*beta,1);
-
-% [gamma2,alpha2.beta2,loglik] = hmmFwdBack(s, A, M);
+[z,p] = hmmDecode(x,model.s,model.A,model.E);
+disp(p);
