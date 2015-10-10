@@ -38,7 +38,8 @@ for iter = 2:maxIter
     xi = A.*(alpha(1:n-1,:)'*bsxfun(@times,beta(2:n,:).*M(2:n,:),1./c(2:end)));
     A = normalize(xi,2);
     %A = normalize(A.*(alpha(1:n-1,:)'*bsxfun(@times,beta(2:n,:).*M(2:n,:),1./c(2:end))),2);
-    s = gamma(1,:)'; % already normalized?
+    [s,~] = normalize(gamma(1,:),2); % normalization?
+    s = s';
     % update emission probabilities
     E = bsxfun(@times,gamma'*X,1./sum(gamma',2));
     M = X*E';
