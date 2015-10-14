@@ -14,13 +14,13 @@ TODO
 - [ ] Linear Models for Regression
   - [x] Maximum Likelihood
   - [x] Maximum Posterior
-  - [ ] Bayesian Linear Regression
-  - [ ] EM algorithm for Bayesian Linear Regression
+  - [x] Bayesian Linear Regression
+  - [x] EM algorithm for Bayesian Linear Regression
 
 - [ ] Linear Models for Classification
   - [x] Maximum Likelihood
   - [x] Maximum Posterior
-  - [ ] Bayesian Linear Regression
+  - [ ] Bayesian Linear Classification
 
 - [ ] Neural Networks
   - [ ] Back-propagation Neural Networks
@@ -37,7 +37,7 @@ TODO
   - [ ] Multinomial Mixture Model
 
 - [ ] Sequential data
-  - [ ] HMM
+  - [x] HMM
   - [ ] Kalman filter
 
 
@@ -46,4 +46,3 @@ Contact
 -------
 sth4nth at gmail dot com
 onerhao at gmail dot com
-
