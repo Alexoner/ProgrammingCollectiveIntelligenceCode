@@ -7,6 +7,6 @@ Code for Learning Artificial Intelligence
 TODO
 ====
 
-[x] Bayesian Linear Regression with EM algorithm
-[ ] Hidden Markov Model
-    [ ] Find all most probable sequence of the chain
+- [x] Bayesian Linear Regression with EM algorithm
+- [ ] Hidden Markov Model
+    - [ ] Find all most probable sequence of the chain
