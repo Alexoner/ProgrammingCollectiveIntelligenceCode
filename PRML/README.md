@@ -36,6 +36,9 @@ TODO
   - [ ] Bernoulli Mixture Model
   - [ ] Multinomial Mixture Model
 
+- [ ] Approximation Inference
+    - [x] Variational EM for GMM
+
 - [ ] Sequential data
   - [x] HMM
   - [ ] Kalman filter

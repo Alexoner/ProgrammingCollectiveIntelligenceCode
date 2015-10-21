@@ -11,7 +11,7 @@ function [label, model, L] = mixGaussVb(X, init, prior)
 % Written by Wichael Chen (sth4nth@gmail.com).
 % Modified by onerhao@gmail.com.
 
-fprintf('Variational Bayesian Gaussian mixture: running ... \n');
+fprintf(stdout,'Variational Bayesian Gaussian mixture: running ... \n');
 [n,d] = size(X);
 [model.R,k] = initialization(X,init);
 if nargin < 3
@@ -21,7 +21,7 @@ if nargin < 3
     prior.nu = d+1;  % Wishart
     prior.W = eye(d);   % Wishart,%W != inv(W)
 end
-tol = 1e-13;
+tol = 1e-10;
 maxiter = 5000;
 L = -inf(1,maxiter);
 label = zeros(n,1);
@@ -32,14 +32,19 @@ while  ~converged && iter < maxiter
     iter = iter+1;
     model = vmax(X, model, prior);
     model = vexp(X, model);
-    L(iter) = vbound(X,model,prior)/n;
+    %L(iter) = vbound(X,model,prior)/n;
+    L(iter) = vbound(X,model,prior);
     if iter > 1
+        diff = abs(L(iter)-L(iter-1))
+        threshold = tol*abs(L(iter))
         converged = abs(L(iter)-L(iter-1)) <= tol*abs(L(iter));
-        if  L(iter)<L(iter-1) 
-            %fprintf('Lower bound decreased by %f ,threshold: %f\n', ...
+        if  L(iter)<L(iter-1)
+            %fprintf(stdout,'Iteration %d,Lower bound decreased by %f ,threshold: %f\n', ...
+                %iter,...
                 %abs(L(iter-1)-L(iter)),...
                 %tol*abs(L(iter)));
         end
+        fflush(stdout);
     end
     [~,label(:)] = max(model.R,[],2);
     %[~,~,label] = unique(label);
