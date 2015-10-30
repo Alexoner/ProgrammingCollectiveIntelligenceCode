@@ -44,4 +44,10 @@ Especially Convolutional neural networks
 - spark
 - R
 - Python
-  
+- 
+### User review Mining
+- Text Rank
+- LDA
+- TF-IDF
+- 
+
