@@ -55,7 +55,7 @@ n = 1000;
 [X,t] = rndKCluster(2,k,n);
 X = X';
 t = t';
-ncentres = 4;
+ncentres = 40;
 [label,model,llh] = mixGaussVb(X,ncentres);
 fprintf('Bayesian Gaussian Mixture Model,lower bound: %f\n',llh(end)/n);
 plot(llh);
