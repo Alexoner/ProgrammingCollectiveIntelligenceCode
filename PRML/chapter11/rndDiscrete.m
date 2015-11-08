@@ -6,6 +6,6 @@ if nargin == 1
 end
 r = rand(1,n);
 p = cumsum(p(:));
- x = sum(repmat(r,length(p),1) > repmat(p/p(end),1,n),1)+1
-% histc(X,EDGES): produce histogram counts
+ %x = sum(repmat(r,length(p),1) > repmat(p/p(end),1,n),1)+1;
+ %histc(X,EDGES): produce histogram counts
 [~,x] = histc(r,[0;p/p(end)]);
