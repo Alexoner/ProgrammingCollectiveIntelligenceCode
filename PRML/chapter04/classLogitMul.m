@@ -48,7 +48,7 @@ while ~converged && iter < maxiter
     logY = log(softmax(Z,2));
     llh(iter) = dot(T(:),logY(:))-0.5*lambda*dot(W(:),W(:));
     converged = abs(llh(iter)-llh(iter-1)) < tol;
-    
+
     Y = exp(logY);
     for i = 1:k
         for j = 1:k
@@ -98,7 +98,7 @@ while ~converged && iter < maxiter
         logY = bsxfun(@minus,Z,logsumexp(Z,2));
         Y = exp(logY);
     end
-    
+
     % compute likelihood function
     llh(iter) = dot(T(:),logY(:))-0.5*lambda*dot(W(:),W(:));
     converged = abs(llh(iter)-llh(iter-1)) < tol;

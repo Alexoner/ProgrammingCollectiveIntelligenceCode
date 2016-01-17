@@ -22,7 +22,7 @@ if nargin < 3
     s = normalize(rand(k,1),1);
 end
 
-%probability given the latent variable,n x k
+%probability given the latent variable, p(\vec{x}_n|\vec{z}n), n x k
 M = X*E';
 
 tol = 1e-4;

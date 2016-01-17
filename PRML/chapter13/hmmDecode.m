@@ -20,9 +20,10 @@ for t = 2 : n,
     % idx: z_{t} that maximizes the message
     [v,idx] = max(bsxfun(@plus,A,w(t-1,:)),[],1);
     w(t,:) = E(:,x(t))'+ v;
-    % rearrange the path matrix,so that each row of Z matrix corresponds to
+    % rearrange the path matrix,so that each column of Z matrix corresponds to
     % a path(sequence) that maximize the joint probability of previous nodes
-    % with current(the tth) latent variable's state as the row index
+    %, known as message passed out, with current(the tth) latent variable's state 
+    % as the row index
     Z = Z(:,idx);
     % current latent variable's states,used in next pass
     Z(t,:) = 1:k;
